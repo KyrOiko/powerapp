@@ -3,6 +3,8 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export const unstable_settings = {
@@ -14,11 +16,14 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+        <Stack.Screen name="new-exercise" options={{ headerShown: false }} />
+        <Stack.Screen name="new-workout" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />
+      </GestureHandlerRootView>
     </ThemeProvider>
   );
 }
