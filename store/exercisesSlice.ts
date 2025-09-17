@@ -22,7 +22,6 @@ const exercisesSlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder.addCase(fetchExercises.fulfilled, (state, action) => {
-      console.log(action.payload.length);
       state.exercises = [...action.payload];
     });
     builder.addCase(fetchExercises.rejected, (state, action) => {

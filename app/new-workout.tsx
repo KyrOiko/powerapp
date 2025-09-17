@@ -8,7 +8,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import TitledPage from '@/components/pages/titled-page';
 import { ThemedText } from '@/components/themed-text';
 import { RootState } from '@/store';
-import { updateTemplateField } from '@/store/workoutTemplateSlice';
+import {
+  addSet,
+  duplicateSet,
+  removeExercise,
+  removeSet,
+  updateRepRangeValue,
+  updateTemplateField,
+} from '@/store/workoutTemplateSlice';
 
 import ExerciseCard from './components/new-workout/exercise_card';
 import SelectExerciseModal from './components/new-workout/select_exercise_modal';
@@ -18,17 +25,6 @@ export default function NewWorkout() {
   const templateState = useSelector((state: RootState) => state.workoutTemplateSlice.template);
   const exercises = useSelector((state: RootState) => state.exercisesSlice.exercises);
   const modalizeRef = useRef<Modalize>(null);
-  const onNameChange = (text: string) => {
-    dispatch(updateTemplateField({ field: 'name', value: text }));
-  };
-
-  const onDescriptionChange = (text: string) => {
-    dispatch(updateTemplateField({ field: 'description', value: text }));
-  };
-
-  const onAddExercisesPress = () => {
-    modalizeRef.current?.open();
-  };
 
   return (
     <>
@@ -40,7 +36,7 @@ export default function NewWorkout() {
           value={templateState.name}
           numberOfLines={4}
           multiline={true}
-          onChangeText={onNameChange}
+          onChangeText={text => dispatch(updateTemplateField({ field: 'name', value: text }))}
         />
         <ThemedText type="smallSubtitle">Template description</ThemedText>
         <TextInput
@@ -49,12 +45,33 @@ export default function NewWorkout() {
           numberOfLines={4}
           multiline={true}
           value={templateState.description}
-          onChangeText={onDescriptionChange}
+          onChangeText={text =>
+            dispatch(updateTemplateField({ field: 'description', value: text }))
+          }
         />
         <ThemedText type="smallSubtitle">Template exercises</ThemedText>
         <FlatList
           data={templateState.exercises}
-          renderItem={({ item }) => <ExerciseCard templateExercise={item} />}
+          renderItem={({ item }) => (
+            <ExerciseCard
+              templateExercise={item}
+              onAddSet={exerciseId => dispatch(addSet({ exerciseId }))}
+              onRemoveSet={(exerciseId, setNumber) =>
+                dispatch(removeSet({ exerciseId, setNumber }))
+              }
+              onDuplicateSet={(exerciseId, setIndex) =>
+                dispatch(duplicateSet({ exerciseId, setIndex }))
+              }
+              onLowerRepRangeChange={(exerciseId, setIndex, value) =>
+                dispatch(updateRepRangeValue({ exerciseId, setIndex, which: 'lower', value }))
+              }
+              onUpperRepRangeChange={(exerciseId, setIndex, value) =>
+                dispatch(updateRepRangeValue({ exerciseId, setIndex, which: 'upper', value }))
+              }
+              onDelete={exerciseId => dispatch(removeExercise({ exerciseId }))}
+              key={item.exercise.id}
+            />
+          )}
           keyExtractor={item => item.exercise.id.toString()}
           ItemSeparatorComponent={() => <View style={styles.exerciseSeparator} />}
           showsVerticalScrollIndicator={false}
@@ -72,7 +89,7 @@ export default function NewWorkout() {
       <SelectExerciseModal
         modalizeRef={modalizeRef}
         exercises={exercises}
-        onAddExercisesPress={onAddExercisesPress}
+        onAddExercisesPress={() => modalizeRef.current?.open()}
       />
     </>
   );

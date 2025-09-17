@@ -1,4 +1,6 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import React from 'react';
+
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -8,36 +10,69 @@ import CreateExerciseTemplate from '@/models/dto/create_exercise_template';
 import SetHeader from './set-header';
 import SetRow from './set-row';
 
-export default function ExerciseCard({
+function ExerciseCard({
   templateExercise,
+  onAddSet,
+  onRemoveSet,
+  onDuplicateSet,
+  onLowerRepRangeChange,
+  onUpperRepRangeChange,
+  onDelete,
 }: {
   templateExercise: CreateExerciseTemplate;
+  onAddSet: (exerciseId: number) => void;
+  onRemoveSet: (exerciseId: number, setNumber: number) => void;
+  onDuplicateSet: (exerciseId: number, setIndex: number) => void;
+  onLowerRepRangeChange: (exerciseId: number, setIndex: number, lower: number) => void;
+  onUpperRepRangeChange: (exerciseId: number, setIndex: number, upper: number) => void;
+  onDelete: (exerciseId: number) => void;
 }) {
   return (
     <View style={styles.gridContainer}>
       <ThemedText type="smallTitle" style={styles.exerciseName}>
-        {templateExercise.exercise.name}
+        {templateExercise.exercise.name} ({templateExercise.sets.length} sets)
       </ThemedText>
       <SetHeader />
-      {templateExercise.sets.map((_, index) => (
-        <SetRow
-          key={index}
-          index={index}
-          onLowerChange={text => {
-            console.log(text);
-          }}
-          onUpperChange={text => {
-            console.log(text);
-          }}
-          set={templateExercise.sets[index]}
-        />
-      ))}
+      <ScrollView
+        style={styles.setsContainer}
+        nestedScrollEnabled={true}
+        showsVerticalScrollIndicator={false}
+      >
+        {templateExercise.sets.map((set, index) => (
+          <View key={set.number}>
+            <SetRow
+              index={index}
+              onLowerChange={text => {
+                onLowerRepRangeChange(templateExercise.exercise.id, index, parseInt(text));
+              }}
+              onUpperChange={text => {
+                onUpperRepRangeChange(templateExercise.exercise.id, index, parseInt(text));
+              }}
+              onDelete={() => onRemoveSet(templateExercise.exercise.id, set.number)}
+              set={set}
+              onDuplicateSet={() => {
+                onDuplicateSet(templateExercise.exercise.id, index);
+              }}
+            />
+            {index < templateExercise.sets.length - 1 && <View style={styles.setSeparator} />}
+          </View>
+        ))}
+      </ScrollView>
+
       <View style={styles.actionsContainer}>
-        <Pressable onPress={() => {}} style={styles.addSetButton}>
+        <Pressable
+          onPress={() => {
+            onAddSet(templateExercise.exercise.id);
+          }}
+          style={styles.addSetButton}
+        >
           <ThemedText type="smallSubtitle">Add set</ThemedText>
         </Pressable>
-        <Pressable style={styles.deleteExerciseButton}>
-          <Ionicons name="trash" size={24} color={'red'}></Ionicons>
+        <Pressable
+          style={styles.deleteExerciseButton}
+          onPress={() => onDelete(templateExercise.exercise.id)}
+        >
+          <Ionicons name="trash" size={24} color={'red'} />
         </Pressable>
       </View>
     </View>
@@ -86,4 +121,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flex: 1,
   },
+  setsContainer: {
+    maxHeight: 200,
+    flexGrow: 0,
+  },
+  setSeparator: {
+    height: 10,
+  },
 });
+
+export default React.memo(ExerciseCard);

@@ -54,8 +54,88 @@ const workoutTemplateSlice = createSlice({
         ];
       }
     },
+    addSet: (state, action: PayloadAction<{ exerciseId: number }>) => {
+      state.template.exercises = state.template.exercises.map(e => {
+        if (e.exercise.id === action.payload.exerciseId) {
+          return {
+            ...e,
+            sets: [
+              ...e.sets,
+              {
+                ...defaultSet,
+                number: e.sets.length + 1,
+              },
+            ],
+          };
+        }
+        return e;
+      });
+    },
+    removeSet: (state, action: PayloadAction<{ exerciseId: number; setNumber: number }>) => {
+      state.template.exercises = state.template.exercises.map(e => {
+        if (e.exercise.id === action.payload.exerciseId) {
+          const newSets = e.sets.filter(set => set.number !== action.payload.setNumber);
+          // Don't allow removing the last set
+          if (newSets.length === 0) {
+            return e;
+          }
+          return { ...e, sets: newSets };
+        }
+        return e;
+      });
+    },
+    duplicateSet: (state, action: PayloadAction<{ exerciseId: number; setIndex: number }>) => {
+      state.template.exercises = state.template.exercises.map(e => {
+        if (e.exercise.id === action.payload.exerciseId) {
+          console.log(action.payload.setIndex);
+          console.log;
+          console.log([
+            ...e.sets,
+            { ...e.sets[action.payload.setIndex], number: e.sets.length + 1 },
+          ]);
+          return {
+            ...e,
+            sets: [...e.sets, { ...e.sets[action.payload.setIndex], number: e.sets.length + 1 }],
+          };
+        }
+        return e;
+      });
+    },
+    updateRepRangeValue: (
+      state,
+      action: PayloadAction<{
+        exerciseId: number;
+        setIndex: number;
+        which: 'lower' | 'upper';
+        value: number;
+      }>
+    ) => {
+      const exercise = state.template.exercises.find(
+        e => e.exercise.id === action.payload.exerciseId
+      );
+      if (exercise) {
+        exercise.sets[action.payload.setIndex].repRange[action.payload.which] =
+          action.payload.value;
+      }
+    },
+    removeExercise: (state, action: PayloadAction<{ exerciseId: number }>) => {
+      state.template.exercises = state.template.exercises.filter(
+        e => e.exercise.id !== action.payload.exerciseId
+      );
+      state.selectedExercises = state.selectedExercises.filter(
+        e => e.id !== action.payload.exerciseId
+      );
+    },
   },
 });
 
-export const { updateTemplateField, toggleSelectedExercise } = workoutTemplateSlice.actions;
+export const {
+  updateTemplateField,
+  toggleSelectedExercise,
+  addSet,
+  removeSet,
+  duplicateSet,
+  updateRepRangeValue,
+  removeExercise,
+} = workoutTemplateSlice.actions;
 export default workoutTemplateSlice.reducer;
