@@ -1,5 +1,4 @@
-import { RIR } from "../enums";
-
+import { RIR } from '../enums';
 
 interface CreateTemplateSetRepRange {
   lower: number;

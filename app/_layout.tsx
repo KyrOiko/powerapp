@@ -1,16 +1,19 @@
+import { useEffect } from 'react';
+
+import { StatusBar } from 'react-native';
+
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { Stack } from 'expo-router';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import 'react-native-reanimated';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { Provider as ReduxProvider } from 'react-redux';
+
 import { AppDataSource } from '@/db/local-db';
 import { seedExercises } from '@/db/seed';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { fetchExercises } from '@/store/exercisesSlice';
 import { store } from '@/store/index';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { useEffect } from 'react';
-import { StatusBar } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import 'react-native-reanimated';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { Provider as ReduxProvider } from 'react-redux';
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -19,11 +22,10 @@ export const unstable_settings = {
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
-
   const initializeDatabase = async () => {
     console.log('Initializing database');
     try {
-    if (AppDataSource.isInitialized) {
+      if (AppDataSource.isInitialized) {
         console.log('Database already initialized');
         return;
       }
@@ -39,7 +41,7 @@ export default function RootLayout() {
     (async () => {
       await initializeDatabase();
       await store.dispatch(fetchExercises());
-    })()
+    })();
   }, []);
 
   return (

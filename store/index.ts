@@ -1,6 +1,7 @@
-import { configureStore } from "@reduxjs/toolkit";
-import exercisesSlice from "./exercisesSlice";
-import workOutTemplateReducer from "./workoutTemplateSlice";
+import { configureStore } from '@reduxjs/toolkit';
+
+import exercisesSlice from './exercisesSlice';
+import workOutTemplateReducer from './workoutTemplateSlice';
 
 export const store = configureStore({
   reducer: {

@@ -1,10 +1,10 @@
-import { Exercise } from "@/models/exercise";
-import ExerciseData from "@/types/exercise";
-import { BaseMapper } from "@/utils/base_mapper";
-import { DataSource } from "typeorm";
+import { DataSource } from 'typeorm';
+
+import { Exercise } from '@/models/exercise';
+import ExerciseData from '@/types/exercise';
+import { BaseMapper } from '@/utils/base_mapper';
 
 export default class ExerciseService {
-
   private localDb: DataSource;
   private mapper: BaseMapper<Exercise, ExerciseData>;
   constructor(localDb: DataSource, mapper: BaseMapper<Exercise, ExerciseData>) {
@@ -14,6 +14,6 @@ export default class ExerciseService {
 
   async getMany(): Promise<ExerciseData[]> {
     const exercises = await this.localDb.getRepository(Exercise).find();
-    return exercises.map((exercise) => this.mapper.map(exercise));
+    return exercises.map(exercise => this.mapper.map(exercise));
   }
 }

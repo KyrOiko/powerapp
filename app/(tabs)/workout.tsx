@@ -1,71 +1,89 @@
-import { ThemedButton } from "@/components/themed-button";
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
-import { templates, WorkoutTemplate } from "@/scripts/exercises";
-import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
-import { useState } from "react";
-import { FlatList, Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
+import { useState } from 'react';
 
+import { FlatList, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
 
+import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
-export default function Workout () {
+import { ThemedButton } from '@/components/themed-button';
+import { ThemedText } from '@/components/themed-text';
+import { ThemedView } from '@/components/themed-view';
+import { WorkoutTemplate, templates } from '@/scripts/exercises';
+
+export default function Workout() {
   const [selectedTemplate, setSelectedTemplate] = useState<WorkoutTemplate | null>(null);
-  const {width} = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
-
-
-
-  const renderTemplate = ({item,setSelectedTemplate}: {item: WorkoutTemplate, setSelectedTemplate: (template: WorkoutTemplate) => void}) => {
+  const renderTemplate = ({
+    item,
+    setSelectedTemplate,
+  }: {
+    item: WorkoutTemplate;
+    setSelectedTemplate: (template: WorkoutTemplate) => void;
+  }) => {
     const isSelected = selectedTemplate?.id === item.id;
     const ITEM_SIZE = 100;
     const numColumns = Math.floor(width / ITEM_SIZE);
 
     return (
-    <Pressable onPress={() => {setSelectedTemplate(item)}}>
-    <View style={[styles.template, {borderColor: isSelected ? 'green' : 'gray'}]}>
-      <View style={styles.templateHeader}>
-        <ThemedText type="small">{item.name}</ThemedText>
-        {isSelected && <ThemedButton title="Start workout" onPress={() => {}} />}
-      </View>
-      <ThemedText type="smallSubtitle">{item.description}</ThemedText>
-      <FlatList
-        data={item.exercises}
-        numColumns={numColumns}
-        renderItem={({item}) => (
-          <View key={item.id} style={[styles.exercise, {borderColor: isSelected ? 'green' : 'gray'}]}>
+      <Pressable
+        onPress={() => {
+          setSelectedTemplate(item);
+        }}
+      >
+        <View style={[styles.template, { borderColor: isSelected ? 'green' : 'gray' }]}>
+          <View style={styles.templateHeader}>
             <ThemedText type="small">{item.name}</ThemedText>
+            {isSelected && <ThemedButton title="Start workout" onPress={() => {}} />}
           </View>
-        )}
-        style={styles.exercisesContainer}
-        keyExtractor={(item) => item.id}
-        ItemSeparatorComponent={() => <View style={styles.exerciseSeparator} />}
-      />
-    </View>
-    </Pressable>
-
-  )
-  }
+          <ThemedText type="smallSubtitle">{item.description}</ThemedText>
+          <FlatList
+            data={item.exercises}
+            numColumns={numColumns}
+            renderItem={({ item }) => (
+              <View
+                key={item.id}
+                style={[styles.exercise, { borderColor: isSelected ? 'green' : 'gray' }]}
+              >
+                <ThemedText type="small">{item.name}</ThemedText>
+              </View>
+            )}
+            style={styles.exercisesContainer}
+            keyExtractor={item => item.id}
+            ItemSeparatorComponent={() => <View style={styles.exerciseSeparator} />}
+          />
+        </View>
+      </Pressable>
+    );
+  };
 
   return (
     <ThemedView>
       <View style={styles.header}>
-      <ThemedText type="title">Workout</ThemedText>
-      <Ionicons name="add-circle" size={24} color="green" onPress={() => {router.push('/new-workout')}} />
+        <ThemedText type="title">Workout</ThemedText>
+        <Ionicons
+          name="add-circle"
+          size={24}
+          color="green"
+          onPress={() => {
+            router.push('/new-workout');
+          }}
+        />
       </View>
 
       <View style={styles.templatesContainer}>
         <FlatList
           data={templates}
-          renderItem={({item}) => renderTemplate({item, setSelectedTemplate})}
-          style={styles.innerContainer} keyExtractor={(item) => item.id}
+          renderItem={({ item }) => renderTemplate({ item, setSelectedTemplate })}
+          style={styles.innerContainer}
+          keyExtractor={item => item.id}
           ItemSeparatorComponent={() => <View style={styles.templateSeparator} />}
           extraData={selectedTemplate}
           showsVerticalScrollIndicator={false}
         />
       </View>
     </ThemedView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({

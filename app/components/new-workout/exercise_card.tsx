@@ -1,35 +1,47 @@
-import { ThemedText } from "@/components/themed-text";
-import CreateExerciseTemplate from "@/models/dto/create_exercise_template";
-import { Ionicons } from "@expo/vector-icons";
-import { Pressable, StyleSheet, View } from "react-native";
-import SetHeader from "./set-header";
-import SetRow from "./set-row";
+import { Pressable, StyleSheet, View } from 'react-native';
 
+import { Ionicons } from '@expo/vector-icons';
 
-export default function ExerciseCard({templateExercise}: {templateExercise: CreateExerciseTemplate}) {
+import { ThemedText } from '@/components/themed-text';
+import CreateExerciseTemplate from '@/models/dto/create_exercise_template';
+
+import SetHeader from './set-header';
+import SetRow from './set-row';
+
+export default function ExerciseCard({
+  templateExercise,
+}: {
+  templateExercise: CreateExerciseTemplate;
+}) {
   return (
     <View style={styles.gridContainer}>
-    <ThemedText type="smallTitle" style={styles.exerciseName}>{templateExercise.exercise.name}</ThemedText>
-    <SetHeader />
-    {templateExercise.sets.map((_,index) => (
+      <ThemedText type="smallTitle" style={styles.exerciseName}>
+        {templateExercise.exercise.name}
+      </ThemedText>
+      <SetHeader />
+      {templateExercise.sets.map((_, index) => (
         <SetRow
-            key={index}
-            index={index}
-            onLowerChange={(text) => {console.log(text)}}
-            onUpperChange={(text) => {console.log(text)}}
-            set={templateExercise.sets[index]}
+          key={index}
+          index={index}
+          onLowerChange={text => {
+            console.log(text);
+          }}
+          onUpperChange={text => {
+            console.log(text);
+          }}
+          set={templateExercise.sets[index]}
         />
-    ))}
-    <View style={styles.actionsContainer}>
+      ))}
+      <View style={styles.actionsContainer}>
         <Pressable onPress={() => {}} style={styles.addSetButton}>
-            <ThemedText type="smallSubtitle">Add set</ThemedText>
+          <ThemedText type="smallSubtitle">Add set</ThemedText>
         </Pressable>
         <Pressable style={styles.deleteExerciseButton}>
-            <Ionicons name='trash' size={24} color={'red'}></Ionicons>
+          <Ionicons name="trash" size={24} color={'red'}></Ionicons>
         </Pressable>
+      </View>
     </View>
-</View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -40,7 +52,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 10,
-},
+  },
   addExerciseButton: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -48,30 +60,30 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 10,
-},
-deleteExerciseButton: {
+  },
+  deleteExerciseButton: {
     padding: 10,
     borderWidth: 1,
     borderColor: 'red',
     borderRadius: 10,
-    maxWidth: 50
-},
-exerciseName: {
+    maxWidth: 50,
+  },
+  exerciseName: {
     color: 'white',
     fontWeight: 'bold',
-},
-actionsContainer: {
+  },
+  actionsContainer: {
     flexDirection: 'row',
     gap: 10,
     justifyContent: 'space-between',
-},
-addSetButton: {
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: 10,
-  borderWidth: 1,
-  borderColor: 'gray',
-  borderRadius: 10,
-  flex:1
-},
+  },
+  addSetButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 10,
+    flex: 1,
+  },
 });

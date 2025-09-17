@@ -5,7 +5,16 @@ import { useThemeColor } from '@/hooks/use-theme-color';
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
   darkColor?: string;
-  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link' | 'smallTitle' | 'smallSubtitle' | 'small' | 'medium';
+  type?:
+    | 'default'
+    | 'title'
+    | 'defaultSemiBold'
+    | 'subtitle'
+    | 'link'
+    | 'smallTitle'
+    | 'smallSubtitle'
+    | 'small'
+    | 'medium';
 };
 
 export function ThemedText({
@@ -29,7 +38,7 @@ export function ThemedText({
         type === 'smallTitle' ? styles.smallTitle : undefined,
         type === 'smallSubtitle' ? styles.smallSubtitle : undefined,
         type === 'small' ? styles.small : undefined,
-        type === 'medium' ? styles.medium: undefined,
+        type === 'medium' ? styles.medium : undefined,
         style,
       ]}
       {...rest}

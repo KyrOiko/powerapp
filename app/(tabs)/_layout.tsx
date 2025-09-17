@@ -1,10 +1,11 @@
-import { Tabs } from 'expo-router';
 import React from 'react';
+
+import { MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
 
 import { HapticTab } from '@/components/haptic-tab';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -15,12 +16,15 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
         tabBarButton: HapticTab,
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="workout"
         options={{
           title: 'Workout',
-          tabBarIcon: ({ color }) => <MaterialCommunityIcons name="weight-lifter" size={24} color={color} />,
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="weight-lifter" size={24} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -34,7 +38,9 @@ export default function TabLayout() {
         name="exercises"
         options={{
           title: 'Exercises',
-          tabBarIcon: ({ color }) => <MaterialCommunityIcons name="dumbbell" size={24} color={color} />,
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="dumbbell" size={24} color={color} />
+          ),
         }}
       />
     </Tabs>

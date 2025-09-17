@@ -1,0 +1,46 @@
+{
+  "semi": true,
+  "trailingComma": "es5",
+  "singleQuote": true,
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "arrowParens": "avoid",
+  "endOfLine": "lf",
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "options": {
+        "parser": "typescript",
+        "importOrder": ["^react$", "^react-native$", "^@?\\w", "^@/", "^\\./", "^\\.\\./"],
+        "importOrderSeparation": true,
+        "importOrderSortSpecifiers": true,
+        "plugins": ["@trivago/prettier-plugin-sort-imports"]
+      }
+    },
+    {
+      "files": ["*.js", "*.jsx"],
+      "options": {
+        "parser": "babel",
+        "importOrder": ["^react$", "^react-native$", "^@?\\w", "^@/", "^\\./", "^\\.\\./"],
+        "importOrderSeparation": true,
+        "importOrderSortSpecifiers": true,
+        "plugins": ["@trivago/prettier-plugin-sort-imports"]
+      }
+    },
+    {
+      "files": "*.json",
+      "options": {
+        "parser": "json"
+      }
+    },
+    {
+      "files": "*.md",
+      "options": {
+        "parser": "markdown"
+      }
+    }
+  ]
+}
