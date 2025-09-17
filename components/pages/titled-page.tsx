@@ -1,0 +1,48 @@
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { StyleSheet, View } from "react-native";
+import { ThemedText } from "../themed-text";
+
+
+export default function TitledPage({title, children}: {title: string, children: React.ReactNode}) {
+  return (
+  <View style={styles.container}>
+    <View style={styles.titleContainer}>
+      <Ionicons name="arrow-back" size={24} color="white" onPress={() => router.back()} />
+      <ThemedText type="title" style={styles.title}>{title}</ThemedText>
+    </View>
+    <View style={styles.content}>
+      {children}
+    </View>
+  </View>
+  )
+}
+
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 16,
+  },
+  backButtonSeparator: {
+    width: 1,
+    height: 24,
+    backgroundColor: 'white',
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+  },
+  content: {
+    flex: 1,
+    gap: 10,
+  },
+});

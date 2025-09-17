@@ -1,14 +1,17 @@
 import { ThemedButton } from "@/components/themed-button";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { exercises } from "@/scripts/exercises";
+import { RootState } from "@/store";
 import { router } from "expo-router";
 import { ScrollView, StyleSheet, View } from "react-native";
+import { useSelector } from "react-redux";
 
 
 
 export default function Exercises () {
-    return (
+  const exercises = useSelector((state: RootState) => state.exercisesSlice.exercises);
+
+  return (
     <ThemedView><ThemedText type="title">Exercises</ThemedText>
     <ScrollView>
     {exercises.map((exercise) => (
