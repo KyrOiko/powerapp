@@ -9,7 +9,7 @@ export class TemplateSet {
   @Column("int") number!: number;
   @Column("int") expectedRIR!: number;
   @Column("int") rest!: number;
-  @Column("text") repRange!: string;
+  @Column("json") repRange!: { lower: number; upper: number };
   @Column("text") guides!: string;
 
   @ManyToOne(() => TemplateExercise, (te) => te.sets, { onDelete: "CASCADE" })

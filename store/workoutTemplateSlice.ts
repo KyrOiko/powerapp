@@ -1,13 +1,23 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { CreateTemplateSet } from '@/models/dto/create_set_template';
 import CreateWorkoutTemplate from '@/models/dto/create_workout_template';
 import { RIR } from '@/models/enums';
+import { workoutTemplateService } from '@/services';
 import ExerciseData from '@/types/exercise';
+
+export const createWorkoutTemplate = createAsyncThunk(
+  'workoutTemplate/createWorkoutTemplate',
+  async (workoutTemplate: CreateWorkoutTemplate) => {
+    const response = await workoutTemplateService.create(workoutTemplate);
+    return response;
+  }
+);
 
 interface WorkoutTemplateState {
   template: CreateWorkoutTemplate;
   selectedExercises: ExerciseData[];
+  loading: boolean;
 }
 
 const initialState: WorkoutTemplateState = {
@@ -17,6 +27,7 @@ const initialState: WorkoutTemplateState = {
     exercises: [],
   },
   selectedExercises: [],
+  loading: false,
 };
 
 const defaultSet: CreateTemplateSet = {
@@ -38,6 +49,7 @@ const workoutTemplateSlice = createSlice({
       (state.template[action.payload.field] as string) = action.payload.value;
     },
     toggleSelectedExercise: (state, action: PayloadAction<{ exercise: ExerciseData }>) => {
+      console.log('toggleSelectedExercise', action.payload.exercise.id);
       const existingIds = state.selectedExercises.map(e => e.id);
       if (existingIds.includes(action.payload.exercise.id)) {
         state.selectedExercises = state.selectedExercises.filter(
@@ -126,6 +138,17 @@ const workoutTemplateSlice = createSlice({
         e => e.id !== action.payload.exerciseId
       );
     },
+  },
+  extraReducers(builder) {
+    builder.addCase(createWorkoutTemplate.fulfilled, (state, action) => {
+      state.template = action.payload;
+    });
+    builder.addCase(createWorkoutTemplate.rejected, (state, action) => {
+      console.error(action.error);
+    });
+    builder.addCase(createWorkoutTemplate.pending, state => {
+      state.loading = true;
+    });
   },
 });
 
