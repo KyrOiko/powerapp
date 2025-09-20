@@ -1,8 +1,8 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { WorkoutExercise } from "./workout-exercise";
+import { ModelWorkoutExercise } from "./workout-exercise";
 
-  @Entity("workout_sets")
-export class WorkoutSet {
+@Entity("workout_sets")
+export class ModelWorkoutSet {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -13,6 +13,6 @@ export class WorkoutSet {
   @Column("float") load!: number;
   @Column("text") notes!: string;
 
-  @ManyToOne(() => WorkoutExercise, (we) => we.sets, { onDelete: "CASCADE" })
-  workoutExercise!: WorkoutExercise;
+  @ManyToOne(() => ModelWorkoutExercise, (we) => we.sets, { onDelete: "CASCADE" })
+  workoutExercise!: ModelWorkoutExercise;
 }

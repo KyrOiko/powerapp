@@ -3,13 +3,15 @@ import { useRef } from 'react';
 import { FlatList, Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { Modalize } from 'react-native-modalize';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import TitledPage from '@/components/pages/titled-page';
 import { ThemedText } from '@/components/themed-text';
+import { useAppDispatch } from '@/hooks/store';
 import { RootState } from '@/store';
 import {
   addSet,
+  createWorkoutTemplate,
   duplicateSet,
   removeExercise,
   removeSet,
@@ -21,7 +23,7 @@ import ExerciseCard from './components/new-workout/exercise_card';
 import SelectExerciseModal from './components/new-workout/select_exercise_modal';
 
 export default function NewWorkout() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const templateState = useSelector((state: RootState) => state.workoutTemplateSlice.template);
   const exercises = useSelector((state: RootState) => state.exercisesSlice.exercises);
   const modalizeRef = useRef<Modalize>(null);
@@ -84,13 +86,19 @@ export default function NewWorkout() {
         >
           <ThemedText type="smallSubtitle">Add exercise</ThemedText>
         </Pressable>
+        <Pressable
+          onPress={() => {
+            console.log('save template');
+            dispatch(createWorkoutTemplate(templateState));
+            console.log('saved template');
+          }}
+          style={styles.addExerciseButton}
+        >
+          <ThemedText type="smallSubtitle">Save template</ThemedText>
+        </Pressable>
       </TitledPage>
 
-      <SelectExerciseModal
-        modalizeRef={modalizeRef}
-        exercises={exercises}
-        onAddExercisesPress={() => modalizeRef.current?.open()}
-      />
+      <SelectExerciseModal modalizeRef={modalizeRef} exercises={exercises} />
     </>
   );
 }

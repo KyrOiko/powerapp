@@ -1,19 +1,19 @@
 import { Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Exercise } from "./exercise";
-import { Workout } from "./workout";
-import { WorkoutSet } from "./workout-set";
+import { ModelExercise } from "./exercise";
+import { ModelWorkout } from "./workout";
+import { ModelWorkoutSet } from "./workout-set";
 
 @Entity("workout_exercises")
-export class WorkoutExercise {
+export class ModelWorkoutExercise {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne(() => Exercise, { eager: true })
-  exercise!: Exercise;
+  @ManyToOne(() => ModelExercise, { eager: true })
+  exercise!: ModelExercise;
 
-  @ManyToOne(() => Workout, (w) => w.exercises, { onDelete: "CASCADE" })
-  workout!: Workout;
+  @ManyToOne(() => ModelWorkout, (w) => w.exercises, { onDelete: "CASCADE" })
+  workout!: ModelWorkout;
 
-  @OneToMany(() => WorkoutSet, (ws) => ws.workoutExercise, { cascade: true })
-  sets!: WorkoutSet[];
+  @OneToMany(() => ModelWorkoutSet, (ws) => ws.workoutExercise, { cascade: true })
+  sets!: ModelWorkoutSet[];
 }

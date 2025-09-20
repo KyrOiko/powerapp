@@ -1,8 +1,8 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { WorkoutExercise } from "./workout-exercise";
+import { ModelWorkoutExercise } from "./workout-exercise";
 
 @Entity("workouts")
-export class Workout {
+export class ModelWorkout {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -10,6 +10,6 @@ export class Workout {
   @Column("text") description!: string;
   @Column("datetime") date!: string;
 
-  @OneToMany(() => WorkoutExercise, (we) => we.workout, { cascade: true })
-  exercises!: WorkoutExercise[];
+  @OneToMany(() => ModelWorkoutExercise, (we) => we.workout, { cascade: true })
+  exercises!: ModelWorkoutExercise[];
 }

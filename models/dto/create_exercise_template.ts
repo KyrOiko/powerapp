@@ -1,4 +1,4 @@
-import ExerciseData from '@/types/exercise';
+import ExerciseData from '@/domain/exercise';
 
 import { CreateTemplateSet } from './create_set_template';
 

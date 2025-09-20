@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
@@ -6,18 +6,40 @@ import { Modalize } from 'react-native-modalize';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ThemedText } from '@/components/themed-text';
+import ExerciseData from '@/domain/exercise';
 import { RootState } from '@/store';
 import { toggleSelectedExercise } from '@/store/workoutTemplateSlice';
-import ExerciseData from '@/types/exercise';
+
+const ExerciseItem = React.memo(
+  ({
+    exercise,
+    isSelected,
+    onPress,
+  }: {
+    exercise: ExerciseData;
+    isSelected: boolean;
+    onPress: () => void;
+  }) => (
+    <Pressable
+      style={[
+        styles.exerciseContainer,
+        {
+          borderColor: isSelected ? 'green' : 'gray',
+        },
+      ]}
+      onPress={onPress}
+    >
+      <ThemedText type="medium">{exercise.name}</ThemedText>
+    </Pressable>
+  )
+);
 
 export default function SelectExerciseModal({
   modalizeRef,
   exercises,
-  onAddExercisesPress,
 }: {
   modalizeRef: React.RefObject<Modalize | null>;
   exercises: ExerciseData[];
-  onAddExercisesPress: () => void;
 }) {
   const dispatch = useDispatch();
   const selectedExercises = useSelector(
@@ -25,9 +47,25 @@ export default function SelectExerciseModal({
   );
 
   const [search, setSearch] = useState('');
-  function onExercisePress(exercise: ExerciseData) {
-    dispatch(toggleSelectedExercise({ exercise }));
-  }
+
+  // Memoize filtered exercises
+  const filteredExercises = useMemo(() => {
+    return exercises.filter((exercise: ExerciseData) =>
+      exercise.name.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [exercises, search]);
+
+  // Memoize selected exercise IDs for faster lookup
+  const selectedExerciseIds = useMemo(() => {
+    return new Set(selectedExercises.map(e => e.id));
+  }, [selectedExercises]);
+
+  const handleExercisePress = React.useCallback(
+    (exercise: ExerciseData) => {
+      dispatch(toggleSelectedExercise({ exercise }));
+    },
+    [dispatch]
+  );
 
   return (
     <Modalize
@@ -48,22 +86,14 @@ export default function SelectExerciseModal({
         />
         <ScrollView style={styles.scrollView}>
           <View style={styles.exercisesGrid}>
-            {exercises
-              .filter((exercise: ExerciseData) =>
-                exercise.name.toLowerCase().includes(search.toLowerCase())
-              )
-              .map((exercise: ExerciseData) => (
-                <Pressable
-                  key={exercise.id}
-                  style={[
-                    styles.exerciseContainer,
-                    { borderColor: selectedExercises.includes(exercise) ? 'green' : 'gray' },
-                  ]}
-                  onPress={() => onExercisePress(exercise)}
-                >
-                  <ThemedText type="medium">{exercise.name}</ThemedText>
-                </Pressable>
-              ))}
+            {filteredExercises.map((exercise: ExerciseData) => (
+              <ExerciseItem
+                key={exercise.id}
+                exercise={exercise}
+                isSelected={selectedExerciseIds.has(exercise.id)}
+                onPress={() => handleExercisePress(exercise)}
+              />
+            ))}
           </View>
         </ScrollView>
       </View>

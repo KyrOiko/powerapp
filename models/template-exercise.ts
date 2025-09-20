@@ -1,19 +1,19 @@
 import { Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Exercise } from "./exercise";
-import { TemplateSet } from "./template-set";
-import { WorkoutTemplate } from "./workout-template";
+import { ModelExercise } from "./exercise";
+import { ModelTemplateSet } from "./template-set";
+import { ModelWorkoutTemplate } from "./template";
 
 @Entity("template_exercises")
-export class TemplateExercise {
+export class ModelTemplateExercise {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne(() => Exercise, { eager: true })
-  exercise!: Exercise;
+  @ManyToOne(() => ModelExercise, { eager: true })
+  exercise!: ModelExercise;
 
-  @ManyToOne(() => WorkoutTemplate, (wt) => wt.exercises, { onDelete: "CASCADE" })
-  template!: WorkoutTemplate;
+  @ManyToOne(() => ModelWorkoutTemplate, (wt) => wt.exercises, { onDelete: "CASCADE" })
+  template!: ModelWorkoutTemplate;
 
-  @OneToMany(() => TemplateSet, (ts) => ts.templateExercise, { cascade: true })
-  sets!: TemplateSet[];
+  @OneToMany(() => ModelTemplateSet, (ts) => ts.templateExercise, { cascade: true })
+  sets!: ModelTemplateSet[];
 }

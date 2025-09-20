@@ -34,7 +34,7 @@ export default function SetRow({
     })
     .onEnd(event => {
       if (event.translationX < -0.1 * SCREEN_WIDTH) {
-        translateX.value = withSpring(-0.35 * SCREEN_WIDTH);
+        translateX.value = withSpring(-0.3 * SCREEN_WIDTH);
       } else {
         translateX.value = withSpring(0);
       }
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderRadius: 10,
     color: 'white',
-    fontSize: 16,
+    fontSize: 12,
     width: 60,
   },
   addSetButton: {

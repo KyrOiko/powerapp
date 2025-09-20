@@ -13,7 +13,7 @@ import {
 
 
 @Entity("exercises")
-export class Exercise {
+export class ModelExercise {
   @PrimaryGeneratedColumn()
   id!: number;
 

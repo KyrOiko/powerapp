@@ -1,9 +1,9 @@
-import { Exercise } from '@/models/exercise';
-import ExerciseData from '@/types/exercise';
+import ExerciseData from '@/domain/exercise';
+import { ModelExercise } from '@/models/exercise';
 import { BaseMapper } from '@/utils/base_mapper';
 
-export const exerciseMapper: BaseMapper<Exercise, ExerciseData> = {
-  map(entity: Exercise): ExerciseData {
+export const exerciseMapper: BaseMapper<ModelExercise, ExerciseData> = {
+  map(entity: ModelExercise): ExerciseData {
     return {
       id: entity.id,
       name: entity.name,

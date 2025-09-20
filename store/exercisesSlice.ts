@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
+import ExerciseData from '@/domain/exercise';
 import { exerciseService } from '@/services';
-import ExerciseData from '@/types/exercise';
 
 export const fetchExercises = createAsyncThunk('exercises/fetchExercises', async () => {
   const exercises = await exerciseService.getMany();

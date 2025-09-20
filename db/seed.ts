@@ -9,6 +9,12 @@ import {
   ExerciseType,
 } from '@/models/enums';
 import { Exercise } from '@/models/exercise';
+import { WorkoutTemplate } from '@/models/template';
+import { TemplateExercise } from '@/models/template-exercise';
+import { TemplateSet } from '@/models/template-set';
+import { Workout } from '@/models/workout';
+import { WorkoutExercise } from '@/models/workout-exercise';
+import { WorkoutSet } from '@/models/workout-set';
 
 import { AppDataSource } from './local-db';
 
@@ -404,6 +410,18 @@ const exercises = [
 ];
 
 export const seedExercises = async () => {
+  const entities = [
+    Exercise,
+    Workout,
+    WorkoutExercise,
+    WorkoutSet,
+    TemplateExercise,
+    TemplateSet,
+    WorkoutTemplate,
+  ];
+  for (const entity of entities) {
+    await AppDataSource.getRepository(entity).deleteAll();
+  }
   await AppDataSource.getRepository(Exercise).deleteAll();
   await AppDataSource.getRepository(Exercise).save(exercises);
   console.log('✅ Database seeded with exercises');
