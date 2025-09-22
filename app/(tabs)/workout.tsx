@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { FlatList, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
 
@@ -8,18 +8,24 @@ import { router } from 'expo-router';
 import { ThemedButton } from '@/components/themed-button';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { WorkoutTemplate, templates } from '@/scripts/exercises';
+import Template from '@/domain/template';
+import { useAppDispatch, useAppSelector } from '@/hooks/store';
+import { fetchTemplates } from '@/store/template/index';
 
 export default function Workout() {
-  const [selectedTemplate, setSelectedTemplate] = useState<WorkoutTemplate | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
   const { width } = useWindowDimensions();
-
+  const templates = useAppSelector(state => state.templatesSlice.templates);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(fetchTemplates());
+  }, []);
   const renderTemplate = ({
     item,
     setSelectedTemplate,
   }: {
-    item: WorkoutTemplate;
-    setSelectedTemplate: (template: WorkoutTemplate) => void;
+    item: Template;
+    setSelectedTemplate: (template: Template) => void;
   }) => {
     const isSelected = selectedTemplate?.id === item.id;
     const ITEM_SIZE = 100;
@@ -45,11 +51,11 @@ export default function Workout() {
                 key={item.id}
                 style={[styles.exercise, { borderColor: isSelected ? 'green' : 'gray' }]}
               >
-                <ThemedText type="small">{item.name}</ThemedText>
+                <ThemedText type="small">{item.exercise.name}</ThemedText>
               </View>
             )}
             style={styles.exercisesContainer}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.id.toString()}
             ItemSeparatorComponent={() => <View style={styles.exerciseSeparator} />}
           />
         </View>
@@ -76,7 +82,7 @@ export default function Workout() {
           data={templates}
           renderItem={({ item }) => renderTemplate({ item, setSelectedTemplate })}
           style={styles.innerContainer}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id.toString()}
           ItemSeparatorComponent={() => <View style={styles.templateSeparator} />}
           extraData={selectedTemplate}
           showsVerticalScrollIndicator={false}

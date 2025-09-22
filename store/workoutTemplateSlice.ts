@@ -4,12 +4,13 @@ import ExerciseData from '@/domain/exercise';
 import { CreateTemplateSet } from '@/models/dto/create_set_template';
 import CreateWorkoutTemplate from '@/models/dto/create_workout_template';
 import { RIR } from '@/models/enums';
-import { workoutTemplateService } from '@/services';
+import { templateService } from '@/services';
 
 export const createWorkoutTemplate = createAsyncThunk(
   'workoutTemplate/createWorkoutTemplate',
   async (workoutTemplate: CreateWorkoutTemplate) => {
-    await workoutTemplateService.create(workoutTemplate);
+    const savedTemplate = await templateService.create(workoutTemplate);
+    return savedTemplate;
   }
 );
 
@@ -139,16 +140,25 @@ const workoutTemplateSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    builder.addCase(createWorkoutTemplate.fulfilled, (state, action) => {
-      // state.template = action.payload;
-      state.loading = false;
-    });
-    builder.addCase(createWorkoutTemplate.rejected, (state, action) => {
-      console.error(action.error);
-    });
-    builder.addCase(createWorkoutTemplate.pending, state => {
-      state.loading = true;
-    });
+    builder
+      .addCase(createWorkoutTemplate.pending, state => {
+        state.loading = true;
+      })
+      .addCase(createWorkoutTemplate.fulfilled, (state, action) => {
+        state.loading = false;
+        // Reset the form after successful creation
+        state.template = {
+          name: 'My template',
+          description: '',
+          exercises: [],
+        };
+        state.selectedExercises = [];
+        console.log('Template created successfully:', action.payload);
+      })
+      .addCase(createWorkoutTemplate.rejected, (state, action) => {
+        state.loading = false;
+        console.error('Failed to create template:', action.error);
+      });
   },
 });
 
