@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import TitledPage from '@/components/pages/titled-page';
 import { ThemedText } from '@/components/themed-text';
 import { useAppDispatch } from '@/hooks/store';
+import { RIR } from '@/models/enums';
 import { RootState } from '@/store';
 import {
   addSet,
@@ -15,19 +16,22 @@ import {
   duplicateSet,
   removeExercise,
   removeSet,
+  setEditedExercise,
+  updateRIRValue,
   updateRepRangeValue,
   updateTemplateField,
 } from '@/store/workoutTemplateSlice';
 
 import ExerciseCard from './components/new-workout/exercise_card';
 import SelectExerciseModal from './components/new-workout/select_exercise_modal';
+import SelectRIRModal from './components/new-workout/select_rir_modal';
 
 export default function NewWorkout() {
   const dispatch = useAppDispatch();
   const templateState = useSelector((state: RootState) => state.workoutTemplateSlice.template);
   const exercises = useSelector((state: RootState) => state.exercisesSlice.exercises);
   const modalizeRef = useRef<Modalize>(null);
-
+  const rirModalizeRef = useRef<Modalize>(null);
   return (
     <>
       <TitledPage title="New Template">
@@ -55,24 +59,30 @@ export default function NewWorkout() {
         <FlatList
           data={templateState.exercises}
           renderItem={({ item }) => (
-            <ExerciseCard
-              templateExercise={item}
-              onAddSet={exerciseId => dispatch(addSet({ exerciseId }))}
-              onRemoveSet={(exerciseId, setNumber) =>
-                dispatch(removeSet({ exerciseId, setNumber }))
-              }
-              onDuplicateSet={(exerciseId, setIndex) =>
-                dispatch(duplicateSet({ exerciseId, setIndex }))
-              }
-              onLowerRepRangeChange={(exerciseId, setIndex, value) =>
-                dispatch(updateRepRangeValue({ exerciseId, setIndex, which: 'lower', value }))
-              }
-              onUpperRepRangeChange={(exerciseId, setIndex, value) =>
-                dispatch(updateRepRangeValue({ exerciseId, setIndex, which: 'upper', value }))
-              }
-              onDelete={exerciseId => dispatch(removeExercise({ exerciseId }))}
-              key={item.exercise.id}
-            />
+            <>
+              <ExerciseCard
+                templateExercise={item}
+                onAddSet={(exerciseId: number) => dispatch(addSet({ exerciseId }))}
+                onRemoveSet={(exerciseId: number, setNumber: number) =>
+                  dispatch(removeSet({ exerciseId, setNumber }))
+                }
+                onDuplicateSet={(exerciseId: number, setIndex: number) =>
+                  dispatch(duplicateSet({ exerciseId, setIndex }))
+                }
+                onLowerRepRangeChange={(exerciseId: number, setIndex: number, value: number) =>
+                  dispatch(updateRepRangeValue({ exerciseId, setIndex, which: 'lower', value }))
+                }
+                onUpperRepRangeChange={(exerciseId: number, setIndex: number, value: number) =>
+                  dispatch(updateRepRangeValue({ exerciseId, setIndex, which: 'upper', value }))
+                }
+                onSelectRIR={(exerciseId: number, setNumber: number) => {
+                  dispatch(setEditedExercise({ setId: setNumber, exerciseId: exerciseId }));
+                  rirModalizeRef.current?.open();
+                }}
+                onDelete={(exerciseId: number) => dispatch(removeExercise({ exerciseId }))}
+                key={item.exercise.id.toString()}
+              />
+            </>
           )}
           keyExtractor={item => item.exercise.id.toString()}
           ItemSeparatorComponent={() => <View style={styles.exerciseSeparator} />}
@@ -99,6 +109,13 @@ export default function NewWorkout() {
       </TitledPage>
 
       <SelectExerciseModal modalizeRef={modalizeRef} exercises={exercises} />
+      <SelectRIRModal
+        modalizeRef={rirModalizeRef}
+        onItemSelect={(RIR: RIR) => {
+          console.log('onItemSelect', RIR);
+          dispatch(updateRIRValue({ value: RIR }));
+        }}
+      />
     </>
   );
 }

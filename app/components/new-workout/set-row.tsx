@@ -16,6 +16,7 @@ export default function SetRow({
   onUpperChange,
   onDelete,
   onDuplicateSet,
+  onSelectRIR,
 }: {
   index: number;
   set: CreateTemplateSet;
@@ -23,6 +24,7 @@ export default function SetRow({
   onUpperChange: (text: string) => void;
   onDelete?: () => void;
   onDuplicateSet?: () => void;
+  onSelectRIR?: () => void;
 }) {
   const translateX = useSharedValue(0);
 
@@ -102,9 +104,13 @@ export default function SetRow({
                 </TextInput>
               </View>
             </View>
-            <View style={[styles.baseGridItem, styles.gridItem3]}>
+            ``
+            <Pressable
+              style={[styles.baseGridItem, styles.gridItem3]}
+              onPress={() => onSelectRIR?.()}
+            >
               <ThemedText type="smallSubtitle">{set.expectedRIR}</ThemedText>
-            </View>
+            </Pressable>
           </View>
         </Animated.View>
       </GestureDetector>

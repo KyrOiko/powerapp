@@ -8,14 +8,18 @@ import { ThemedText } from '../themed-text';
 export default function TitledPage({
   title,
   children,
+  backButton = true,
 }: {
   title: string;
   children: React.ReactNode;
+  backButton?: boolean;
 }) {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Ionicons name="arrow-back" size={24} color="white" onPress={() => router.back()} />
+        {backButton && (
+          <Ionicons name="arrow-back" size={24} color="white" onPress={() => router.back()} />
+        )}
         <ThemedText type="title" style={styles.title}>
           {title}
         </ThemedText>

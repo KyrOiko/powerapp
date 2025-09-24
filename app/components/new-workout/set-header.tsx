@@ -13,7 +13,7 @@ export default function SetHeader() {
           <ThemedText type="smallSubtitle">Rep Range</ThemedText>
         </View>
         <View style={[styles.baseGridItem, styles.gridItem3]}>
-          <ThemedText type="smallSubtitle">RPE</ThemedText>
+          <ThemedText type="smallSubtitle">RIR</ThemedText>
         </View>
       </View>
     </View>

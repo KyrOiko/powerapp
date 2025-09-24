@@ -54,6 +54,7 @@ export default function RootLayout() {
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="new-exercise" options={{ headerShown: false }} />
                 <Stack.Screen name="new-workout" options={{ headerShown: false }} />
+                <Stack.Screen name="details-workout" options={{ headerShown: false }} />
               </Stack>
               <StatusBar hidden={false} />
             </SafeAreaView>

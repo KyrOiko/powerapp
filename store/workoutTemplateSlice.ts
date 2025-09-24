@@ -18,6 +18,8 @@ interface WorkoutTemplateState {
   template: CreateWorkoutTemplate;
   selectedExercises: ExerciseData[];
   loading: boolean;
+  editSetId: number | null;
+  editExerciseId: number | null;
 }
 
 const initialState: WorkoutTemplateState = {
@@ -26,6 +28,8 @@ const initialState: WorkoutTemplateState = {
     description: '',
     exercises: [],
   },
+  editSetId: null,
+  editExerciseId: null,
   selectedExercises: [],
   loading: false,
 };
@@ -47,6 +51,10 @@ const workoutTemplateSlice = createSlice({
       action: PayloadAction<{ field: keyof CreateWorkoutTemplate; value: string }>
     ) => {
       (state.template[action.payload.field] as string) = action.payload.value;
+    },
+    setEditedExercise: (state, action: PayloadAction<{ setId: number; exerciseId: number }>) => {
+      state.editSetId = action.payload.setId;
+      state.editExerciseId = action.payload.exerciseId;
     },
     toggleSelectedExercise: (state, action: PayloadAction<{ exercise: ExerciseData }>) => {
       console.log('toggleSelectedExercise', action.payload.exercise.id);
@@ -130,6 +138,24 @@ const workoutTemplateSlice = createSlice({
           action.payload.value;
       }
     },
+    updateRIRValue: (state, action: PayloadAction<{ value: RIR }>) => {
+      console.log('updateRIRValue', action.payload.value);
+      console.log('state.editExerciseId', state.editExerciseId);
+      console.log('state.editSetId', state.editSetId);
+      const exercise = state.template.exercises.find(e => e.exercise.id === state.editExerciseId);
+      console.log('exercise', exercise);
+
+      if (exercise && state.editSetId !== null) {
+        const setToUpdate = exercise.sets.find(s => s.number === state.editSetId);
+
+        if (setToUpdate) {
+          console.log('MPAINW - updating RIR to:', action.payload.value);
+          setToUpdate.expectedRIR = action.payload.value;
+        } else {
+          console.log('Set not found with number:', state.editSetId);
+        }
+      }
+    },
     removeExercise: (state, action: PayloadAction<{ exerciseId: number }>) => {
       state.template.exercises = state.template.exercises.filter(
         e => e.exercise.id !== action.payload.exerciseId
@@ -170,5 +196,7 @@ export const {
   duplicateSet,
   updateRepRangeValue,
   removeExercise,
+  updateRIRValue,
+  setEditedExercise,
 } = workoutTemplateSlice.actions;
 export default workoutTemplateSlice.reducer;

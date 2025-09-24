@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
@@ -10,7 +10,7 @@ import ExerciseData from '@/domain/exercise';
 import { RootState } from '@/store';
 import { toggleSelectedExercise } from '@/store/workoutTemplateSlice';
 
-const ExerciseItem = React.memo(
+const ExerciseItem = memo(
   ({
     exercise,
     isSelected,
@@ -60,7 +60,7 @@ export default function SelectExerciseModal({
     return new Set(selectedExercises.map(e => e.id));
   }, [selectedExercises]);
 
-  const handleExercisePress = React.useCallback(
+  const handleExercisePress = useCallback(
     (exercise: ExerciseData) => {
       dispatch(toggleSelectedExercise({ exercise }));
     },

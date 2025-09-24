@@ -1,4 +1,4 @@
-import React from 'react';
+import { Fragment, memo } from 'react';
 
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
@@ -18,6 +18,7 @@ function ExerciseCard({
   onLowerRepRangeChange,
   onUpperRepRangeChange,
   onDelete,
+  onSelectRIR: onSelectRIR,
 }: {
   templateExercise: CreateExerciseTemplate;
   onAddSet: (exerciseId: number) => void;
@@ -26,6 +27,7 @@ function ExerciseCard({
   onLowerRepRangeChange: (exerciseId: number, setIndex: number, lower: number) => void;
   onUpperRepRangeChange: (exerciseId: number, setIndex: number, upper: number) => void;
   onDelete: (exerciseId: number) => void;
+  onSelectRIR: (exerciseId: number, setNumber: number) => void;
 }) {
   return (
     <View style={styles.gridContainer}>
@@ -39,7 +41,7 @@ function ExerciseCard({
         showsVerticalScrollIndicator={false}
       >
         {templateExercise.sets.map((set, index) => (
-          <View key={set.number}>
+          <Fragment key={set.number}>
             <SetRow
               index={index}
               onLowerChange={text => {
@@ -53,9 +55,10 @@ function ExerciseCard({
               onDuplicateSet={() => {
                 onDuplicateSet(templateExercise.exercise.id, index);
               }}
+              onSelectRIR={() => onSelectRIR(templateExercise.exercise.id, set.number)}
             />
             {index < templateExercise.sets.length - 1 && <View style={styles.setSeparator} />}
-          </View>
+          </Fragment>
         ))}
       </ScrollView>
 
@@ -130,4 +133,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default React.memo(ExerciseCard);
+export default memo(ExerciseCard);
