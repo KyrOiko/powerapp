@@ -19,9 +19,9 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="workout"
+        name="template"
         options={{
-          title: 'Workout',
+          title: 'Template',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="weight-lifter" size={24} color={color} />
           ),

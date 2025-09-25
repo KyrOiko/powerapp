@@ -1,21 +1,22 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import ExerciseData from '@/domain/exercise';
-import { CreateTemplateSet } from '@/models/dto/create_set_template';
+import WorkoutTemplate from '@/domain/template';
+import TemplateSet from '@/domain/template_set';
 import CreateWorkoutTemplate from '@/models/dto/create_workout_template';
 import { RIR } from '@/models/enums';
 import { templateService } from '@/services';
 
 export const createWorkoutTemplate = createAsyncThunk(
   'workoutTemplate/createWorkoutTemplate',
-  async (workoutTemplate: CreateWorkoutTemplate) => {
+  async (workoutTemplate: WorkoutTemplate) => {
     const savedTemplate = await templateService.create(workoutTemplate);
     return savedTemplate;
   }
 );
 
 interface WorkoutTemplateState {
-  template: CreateWorkoutTemplate;
+  template: WorkoutTemplate;
   selectedExercises: ExerciseData[];
   loading: boolean;
   editSetId: number | null;
@@ -24,6 +25,7 @@ interface WorkoutTemplateState {
 
 const initialState: WorkoutTemplateState = {
   template: {
+    id: -1,
     name: 'My template',
     description: '',
     exercises: [],
@@ -34,7 +36,8 @@ const initialState: WorkoutTemplateState = {
   loading: false,
 };
 
-const defaultSet: CreateTemplateSet = {
+const defaultSet: TemplateSet = {
+  id: -1,
   number: 1,
   expectedRIR: RIR.One,
   rest: 0,
@@ -70,7 +73,7 @@ const workoutTemplateSlice = createSlice({
         state.selectedExercises = [...state.selectedExercises, action.payload.exercise];
         state.template.exercises = [
           ...state.template.exercises,
-          { exercise: action.payload.exercise, sets: [defaultSet] },
+          { id: -1, exercise: action.payload.exercise, sets: [defaultSet] },
         ];
       }
     },
@@ -174,6 +177,7 @@ const workoutTemplateSlice = createSlice({
         state.loading = false;
         // Reset the form after successful creation
         state.template = {
+          id: -1,
           name: 'My template',
           description: '',
           exercises: [],

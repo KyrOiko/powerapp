@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import exercisesSlice from './exercisesSlice';
 import templatesSlice from './template/index';
+import workoutIndexSlice from './workout';
 import workOutTemplateReducer from './workoutTemplateSlice';
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     workoutTemplateSlice: workOutTemplateReducer,
     exercisesSlice: exercisesSlice,
     templatesSlice: templatesSlice,
+    workoutIndexSlice: workoutIndexSlice,
   },
 });
 

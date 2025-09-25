@@ -1,6 +1,7 @@
 import { FlatList, Pressable, StyleSheet } from 'react-native';
 
-import { useLocalSearchParams } from 'expo-router';
+import { Feather } from '@expo/vector-icons';
+import { router, useLocalSearchParams } from 'expo-router';
 
 import TitledPage from '@/components/pages/titled-page';
 import { ThemedText } from '@/components/themed-text';
@@ -14,7 +15,17 @@ export default function DetailsWorkout() {
     state.templatesSlice.templates.find(template => template.id === Number(id))
   );
   return (
-    <TitledPage title={template?.name ?? ''}>
+    <TitledPage
+      title={template?.name ?? ''}
+      actionComponent={
+        <Feather
+          name="edit-2"
+          size={22}
+          color="white"
+          onPress={() => router.push(`/edit-template?id=${id}`)}
+        />
+      }
+    >
       {template?.description && <ThemedText>{template?.description}</ThemedText>}
       <FlatList
         data={template?.exercises}

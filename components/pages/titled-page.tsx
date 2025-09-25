@@ -9,10 +9,12 @@ export default function TitledPage({
   title,
   children,
   backButton = true,
+  actionComponent,
 }: {
   title: string;
   children: React.ReactNode;
   backButton?: boolean;
+  actionComponent?: React.ReactNode;
 }) {
   return (
     <View style={styles.container}>
@@ -23,6 +25,7 @@ export default function TitledPage({
         <ThemedText type="title" style={styles.title}>
           {title}
         </ThemedText>
+        <View style={styles.actionContainer}>{actionComponent}</View>
       </View>
       <View style={styles.content}>{children}</View>
     </View>
@@ -46,8 +49,12 @@ const styles = StyleSheet.create({
     height: 24,
     backgroundColor: 'white',
   },
+  actionContainer: {
+    flex: 1,
+    alignItems: 'flex-end',
+  },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 'bold',
   },
   content: {

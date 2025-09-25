@@ -10,7 +10,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Provider as ReduxProvider } from 'react-redux';
 
 import { AppDataSource } from '@/db/local-db';
-import { seedExercises } from '@/db/seed';
+import { initializeDatabase } from '@/db/seed-example';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { fetchExercises } from '@/store/exercisesSlice';
 import { store } from '@/store/index';
@@ -22,16 +22,14 @@ export const unstable_settings = {
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
-  const initializeDatabase = async () => {
+  const initDatabase = async () => {
     console.log('Initializing database');
     try {
       if (AppDataSource.isInitialized) {
         console.log('Database already initialized');
         return;
       }
-      await AppDataSource.initialize();
-      console.log('Database initialized');
-      await seedExercises();
+      await initializeDatabase();
     } catch (error) {
       console.error('Error initializing database', error);
     }
@@ -39,7 +37,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     (async () => {
-      await initializeDatabase();
+      await initDatabase();
       await store.dispatch(fetchExercises());
     })();
   }, []);
@@ -53,8 +51,9 @@ export default function RootLayout() {
               <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="new-exercise" options={{ headerShown: false }} />
-                <Stack.Screen name="new-workout" options={{ headerShown: false }} />
-                <Stack.Screen name="details-workout" options={{ headerShown: false }} />
+                <Stack.Screen name="new-template" options={{ headerShown: false }} />
+                <Stack.Screen name="details-template" options={{ headerShown: false }} />
+                <Stack.Screen name="edit-template" options={{ headerShown: false }} />
               </Stack>
               <StatusBar hidden={false} />
             </SafeAreaView>

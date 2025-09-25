@@ -11,7 +11,7 @@ import { fetchTemplates } from '@/store/template/index';
 
 import TemplateCard from '../components/workout/templateCard';
 
-export default function Workout() {
+export default function Template() {
   const templates = useAppSelector(state => state.templatesSlice.templates);
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -19,18 +19,20 @@ export default function Workout() {
   }, []);
 
   return (
-    <TitledPage title="Workout" backButton={false}>
-      <View style={styles.header}>
+    <TitledPage
+      title="Template"
+      backButton={false}
+      actionComponent={
         <Ionicons
           name="add-circle"
-          size={22}
-          color="green"
+          size={23}
+          color="white"
           onPress={() => {
-            router.push('/new-workout');
+            router.push('/new-template');
           }}
         />
-      </View>
-
+      }
+    >
       <View style={styles.templatesContainer}>
         <FlatList
           data={templates}
@@ -38,7 +40,7 @@ export default function Workout() {
             <TemplateCard
               item={item}
               onCardPress={() => {
-                router.push(`/details-workout?id=${item.id}`);
+                router.push(`/details-template?id=${item.id}`);
               }}
               isSelected={false}
             />
